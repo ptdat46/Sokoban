@@ -1,0 +1,42 @@
+# depslib dependency file v1.0
+1682172122 source:d:\code\cpp\sdl final\movement.cpp
+	"movement.h"
+	<bits/stdc++.h>
+
+1682172128 d:\code\cpp\sdl final\movement.h
+	<bits/stdc++.h>
+
+1682172152 source:d:\code\cpp\sdl final\main.cpp
+	<iostream>
+	<SDL.h>
+	<SDL_image.h>
+	<bits/stdc++.h>
+	<fstream>
+	<SDL_mixer.h>
+	<deque>
+	"movement.h"
+	"loadMap.h"
+	"baseFunc.h"
+	<SDL_ttf.h>
+
+1682153454 d:\code\cpp\sdl final\loadmap.h
+	<bits/stdc++.h>
+	<SDL.h>
+	<SDL_image.h>
+
+1682153539 source:d:\code\cpp\sdl final\loadmap.cpp
+	<bits/stdc++.h>
+	<SDL_image.h>
+	<SDL.h>
+
+1682065649 source:d:\code\cpp\sdl final\basefunc.cpp
+	<bits/stdc++.h>
+	<SDL.h>
+
+1682065647 d:\code\cpp\sdl final\basefunc.h
+	<bits/stdc++.h>
+	<SDL.h>
+
+1682079884 d:\code\cpp\sdl final\gameplay.h
+	<SDL.h>
+
