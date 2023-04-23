@@ -118,12 +118,14 @@ void loadMap(char game_map[24][16], SDL_Renderer *renderer, bool &check_success,
         check_success = true;
     }
     if(option_is_on % 2 != 0) {
+        SDL_Texture *option_background = loadTexture("Image/option_background.png", renderer);
+        SDL_RenderCopy(renderer, option_background, NULL, NULL);
         SDL_Rect option;
         option.x = 180;
         option.y = 110;
         option.w = 240;
         option.h = 180;
-        SDL_Texture *option_board = loadTexture("Image/level_background.png", renderer);
+        SDL_Texture *option_board = loadTexture("Image/option.png", renderer);
         SDL_RenderCopy(renderer, option_board, NULL, &option);
         SDL_RenderPresent(renderer);
     }

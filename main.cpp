@@ -25,6 +25,7 @@ void gamePlay(SDL_Window* window, SDL_Renderer* renderer, SDL_Event &e, string s
 void Start(SDL_Window* window, SDL_Renderer* renderer, SDL_Event &e);
 void gameMenu(SDL_Window *window, SDL_Renderer *renderer, SDL_Event &e);
 void loadFont(string s, int x, int y, int w, int h, SDL_Renderer *renderer);
+void Option(int &option_is_on, SDL_Event &e, SDL_Window *window, SDL_Renderer *renderer);
 
 int main(int argc, char* argv[])
 {
@@ -97,6 +98,7 @@ void mouseLeftClicked(SDL_Renderer *renderer, SDL_Event e, char game_map[24][16]
 
 void gamePlay(SDL_Window* window, SDL_Renderer* renderer, SDL_Event &e, string s)
 {
+    char tmp_map[24][16];
     char game_map[24][16];
     bool check_success = false;
     int is_pause = 0;
@@ -115,6 +117,7 @@ void gamePlay(SDL_Window* window, SDL_Renderer* renderer, SDL_Event &e, string s
         for(int i = 0; i < 24; i++)
         {
             file >> game_map[i][j];
+            tmp_map[i][j] = game_map[i][j];
             if(game_map[i][j] == 'x')
             {
                 player.x = i;
@@ -155,17 +158,14 @@ void gamePlay(SDL_Window* window, SDL_Renderer* renderer, SDL_Event &e, string s
             else if (e.key.keysym.sym == SDLK_RIGHT)
             {
                 moveRight(player, arr_coin, arr_box, game_map, undo_list, game_map_saved, row);
-                //saveMap(undo_list, game_map_saved, row, game_map);
             }
             else if (e.key.keysym.sym == SDLK_DOWN)
             {
                 moveDown(player, arr_coin, arr_box, game_map, undo_list, game_map_saved, row);
-                //saveMap(undo_list, game_map_saved, row, game_map);
             }
             else if (e.key.keysym.sym == SDLK_UP)
             {
                 moveUp(player, arr_coin, arr_box, game_map, undo_list, game_map_saved, row);
-                //saveMap(undo_list, game_map_saved, row, game_map);
             }
         }
         if(e.type == SDL_MOUSEBUTTONDOWN)
@@ -178,6 +178,12 @@ void gamePlay(SDL_Window* window, SDL_Renderer* renderer, SDL_Event &e, string s
         if(check_success == false && (e.type == SDL_MOUSEBUTTONDOWN || e.type == SDL_KEYDOWN))
         {
             loadMap(game_map, renderer, check_success, is_pause, option_is_on);
+            if(option_is_on % 2 != 0)
+            {
+                Option(option_is_on, e, window, renderer);
+                loadMap(game_map, renderer, check_success, is_pause, option_is_on);
+            }
+
         }
         else if(check_success == true)
         {
@@ -322,4 +328,34 @@ void loadFont(string s, int x, int y, int w, int h, SDL_Renderer *renderer)
     srcRest.y = 100;
     SDL_RenderCopy(renderer, texture, NULL, &desRect);
     //SDL_RenderPresent(renderer);
+}
+
+void Option(int &option_is_on, SDL_Event &e, SDL_Window *window, SDL_Renderer *renderer)
+{
+        while(true)
+        {
+                SDL_Delay(10);
+                if ( SDL_WaitEvent(&e) == 0) continue;
+                if (e.type == SDL_QUIT) quitSDL(window, renderer);
+                if(e.type == SDL_MOUSEBUTTONDOWN)
+                {
+                    if(e.button.button == SDL_BUTTON_LEFT)
+                    {
+                        if(e.button.x >= 212 && e.button.x <= 388 && e.button.y >= 122 && e.button.y <= 162)
+                        {
+                            //resume
+                            break;
+                        }
+                        else if(e.button.x >= 212 && e.button.x <= 388 && e.button.y >= 181 && e.button.y <= 220)
+                        {
+                            //restart
+                        }
+                        else if(e.button.x >= 212 && e.button.x <= 388 && e.button.y >= 238 && e.button.y <= 277)
+                        {
+                            gameMenu(window, renderer, e);
+                        }
+                    }
+                }
+        }
+        option_is_on++;
 }
