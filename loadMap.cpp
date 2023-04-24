@@ -24,7 +24,7 @@ SDL_Texture* loadTexture(const char* filename, SDL_Renderer *renderer)
     return newTexture;
 }
 
-void loadMap(char game_map[24][16], SDL_Renderer *renderer, bool &check_success, int is_pause, int option_is_on)
+void loadMap(char game_map[24][16], SDL_Renderer *renderer, bool &check_success, int music_is_pause, int option_is_on)
 {
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
     SDL_RenderClear(renderer);
@@ -95,7 +95,7 @@ void loadMap(char game_map[24][16], SDL_Renderer *renderer, bool &check_success,
     maprect.w = pixel+12;
     maprect.h = pixel+12;
     SDL_RenderCopy(renderer, menuButton, NULL, &maprect);
-    if(is_pause%2 == 0)
+    if(music_is_pause%2 == 0)
     {
         maprect.x = 450;
         maprect.y = 15;

@@ -17,11 +17,13 @@ const int window_width = 600;
 const int window_height = 400;
 const int pixel = 25;
 char tmp_map[24][16];
+int music_is_pause = 0;
+bool unlocked_map[31];
 SDL_Event e;
 const string window_title = "Game project";
 
 void mouseLeftClicked(SDL_Renderer *renderer, SDL_Event e, char game_map[24][16], vector<vector<char>> game_map_saved, deque<vector<vector<char>>> &undo_list,
-                    int &undo_times, int &is_pause, vector<obj> &arr_box, vector<char> &row, obj &player, int &option_is_on);
+                    int &undo_times, int &music_is_pause, vector<obj> &arr_box, vector<char> &row, obj &player, int &option_is_on);
 void gamePlay(SDL_Window* window, SDL_Renderer* renderer, SDL_Event &e, string s, char (&tmp_map)[24][16]);
 void Start(SDL_Window* window, SDL_Renderer* renderer, SDL_Event &e);
 void gameMenu(SDL_Window *window, SDL_Renderer *renderer, SDL_Event &e);
@@ -33,6 +35,8 @@ int main(int argc, char* argv[])
     SDL_Window* window;
     SDL_Renderer* renderer;
     initSDL(window, renderer);
+    memset(unlocked_map, false, sizeof(unlocked_map));
+    unlocked_map[1] = true;
     SDL_RenderClear(renderer);
     Mix_Music *gMusic = NULL;
     Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
@@ -45,7 +49,7 @@ int main(int argc, char* argv[])
 }
 
 void mouseLeftClicked(SDL_Renderer *renderer, SDL_Event e, char game_map[24][16], vector<vector<char>> game_map_saved, deque<vector<vector<char>>> &undo_list,
-                    int &undo_times, int &is_pause, vector<obj> &arr_box, vector<char> &row, obj &player, int &option_is_on)
+                    int &undo_times, int &music_is_pause, vector<obj> &arr_box, vector<char> &row, obj &player, int &option_is_on)
 {
     if(e.button.x <= 570 && e.button.x >= 550 && e.button.y <= 40 && e.button.y >= 20 && !undo_list.empty() && undo_times > 0)
     {
@@ -84,7 +88,7 @@ void mouseLeftClicked(SDL_Renderer *renderer, SDL_Event e, char game_map[24][16]
     }
     if(e.button.x <= 480 && e.button.x >= 450 && e.button.y <= 45 && e.button.y >= 15)
     {
-        if(is_pause%2 == 0)
+        if(music_is_pause%2 == 0)
         {
             Mix_PauseMusic();
         }
@@ -92,7 +96,7 @@ void mouseLeftClicked(SDL_Renderer *renderer, SDL_Event e, char game_map[24][16]
         {
             Mix_ResumeMusic();
         }
-        is_pause++;
+    music_is_pause++;
     }
     if(e.button.x <= 534 && e.button.x >= 497 && e.button.y <= 52 && e.button.y >= 15)
     {
@@ -105,11 +109,15 @@ void gamePlay(SDL_Window* window, SDL_Renderer* renderer, SDL_Event &e, string s
 {
     char game_map[24][16];
     bool check_success = false;
-    int is_pause = 0;
     int option_is_on = 0;
     bool running = true;
     int undo_times = 3;
-    ifstream file("map" + s + ".txt");
+    int map_num;
+    if(s != "Restart")
+    {
+        map_num = stoi(s);
+    }
+    ifstream file("Map/map" + s + ".txt");
     if(s == "Restart")
     {
         for(int j = 0; j < 16; j++)
@@ -154,7 +162,7 @@ void gamePlay(SDL_Window* window, SDL_Renderer* renderer, SDL_Event &e, string s
         }
     }
     //Module load map (sử dụng load map đầu game và load map sau khi undo)
-    loadMap(game_map, renderer, check_success, is_pause, option_is_on);
+    loadMap(game_map, renderer, check_success, music_is_pause, option_is_on);
     /*Game loop*/
     while(running)
     {
@@ -185,16 +193,16 @@ void gamePlay(SDL_Window* window, SDL_Renderer* renderer, SDL_Event &e, string s
         {
             if(e.button.button == SDL_BUTTON_LEFT)
             {
-                mouseLeftClicked(renderer, e, game_map, game_map_saved, undo_list, undo_times, is_pause, arr_box, row, player, option_is_on);
+                mouseLeftClicked(renderer, e, game_map, game_map_saved, undo_list, undo_times, music_is_pause, arr_box, row, player, option_is_on);
             }
         }
         if(check_success == false && (e.type == SDL_MOUSEBUTTONDOWN || e.type == SDL_KEYDOWN))
         {
-            loadMap(game_map, renderer, check_success, is_pause, option_is_on);
+            loadMap(game_map, renderer, check_success, music_is_pause, option_is_on);
             if(option_is_on % 2 != 0)
             {
                 Option(option_is_on, e, window, renderer, tmp_map);
-                loadMap(game_map, renderer, check_success, is_pause, option_is_on);
+                loadMap(game_map, renderer, check_success, music_is_pause, option_is_on);
             }
 
         }
@@ -258,6 +266,7 @@ void gameMenu(SDL_Window *window, SDL_Renderer *renderer, SDL_Event &e)
     for(int i = 1; i <= 30; i++)
     {
         SDL_Texture *level_background = loadTexture("Image/level_background.png", renderer);
+        SDL_Texture *lock = loadTexture("Image/lock.png", renderer);
         SDL_Rect lvRect;
         if(i <= 10)
         {
@@ -279,6 +288,14 @@ void gameMenu(SDL_Window *window, SDL_Renderer *renderer, SDL_Event &e)
         SDL_RenderCopy(renderer, level_background, NULL, &lvRect);
         string s = to_string(i);
         loadFont(s ,lvRect.x+5, lvRect.y+5, 30, 30, renderer);
+        if(unlocked_map[i] == false)
+        {
+            lvRect.x += 10;
+            lvRect.y += 10;
+            lvRect.w = 20;
+            lvRect.h = 20;
+            SDL_RenderCopy(renderer, lock, NULL, &lvRect);
+        }
     }
     SDL_RenderPresent(renderer);
     while(true)
@@ -290,6 +307,8 @@ void gameMenu(SDL_Window *window, SDL_Renderer *renderer, SDL_Event &e)
         {
             for(int i = 1; i <= 30; i++)
             {
+                if(unlocked_map[i] == true)
+                {
                 SDL_Texture *level_background = loadTexture("Image/level_background.png", renderer);
                 SDL_Rect lvRect;
                 if(i <= 10)
@@ -315,6 +334,7 @@ void gameMenu(SDL_Window *window, SDL_Renderer *renderer, SDL_Event &e)
                     gamePlay(window, renderer, e, s, tmp_map);
                     quitSDL(window, renderer);
                     break;
+                }
                 }
             }
         }
