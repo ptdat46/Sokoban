@@ -29,6 +29,7 @@ void Start(SDL_Window* window, SDL_Renderer* renderer, SDL_Event &e);
 void gameMenu(SDL_Window *window, SDL_Renderer *renderer, SDL_Event &e);
 void loadFont(string s, int x, int y, int w, int h, SDL_Renderer *renderer);
 void Option(int &option_is_on, SDL_Event &e, SDL_Window *window, SDL_Renderer *renderer, char (&tmp_map)[24][16]);
+void mapDone(int &map_num, SDL_Window *window, SDL_Renderer *renderer);
 
 int main(int argc, char* argv[])
 {
@@ -208,9 +209,7 @@ void gamePlay(SDL_Window* window, SDL_Renderer* renderer, SDL_Event &e, string s
         }
         else if(check_success == true)
         {
-            SDL_Texture* youWin = loadTexture("Image/youWin.png", renderer);
-            SDL_RenderCopy(renderer, youWin, NULL, NULL);
-            SDL_RenderPresent(renderer);
+            mapDone(map_num, window, renderer);
         }
     }
 }
@@ -392,4 +391,37 @@ void Option(int &option_is_on, SDL_Event &e, SDL_Window *window, SDL_Renderer *r
                 }
         }
         option_is_on++;
+}
+
+void mapDone(int &map_num, SDL_Window *window, SDL_Renderer *renderer)
+{
+    map_num++;
+    unlocked_map[map_num] = true;
+    SDL_Texture *option_background = loadTexture("Image/option_background.png", renderer);
+    SDL_RenderCopy(renderer, option_background, NULL, NULL);
+    SDL_Rect youWin;
+    youWin.x = 180;
+    youWin.y = 110;
+    youWin.w = 240;
+    youWin.h = 180;
+    SDL_Texture *youWin_board = loadTexture("Image/youWin.png", renderer);
+    SDL_RenderCopy(renderer, youWin_board, NULL, &youWin);
+    SDL_RenderPresent(renderer);
+    while(true)
+    {
+        SDL_Delay(10);
+        if ( SDL_WaitEvent(&e) == 0) continue;
+        if (e.type == SDL_QUIT) quitSDL(window, renderer);
+        if(e.type == SDL_MOUSEBUTTONDOWN)
+        {
+            if(e.button.x >= 210 && e.button.x <= 390 && e.button.y >= 180 && e.button.y <= 220)
+            {
+                gamePlay(window, renderer, e, to_string(map_num), tmp_map);
+            }
+            else if(e.button.x >= 210 && e.button.x <= 390 && e.button.y >= 232 && e.button.y <= 272)
+            {
+                gameMenu(window, renderer, e);
+            }
+        }
+    }
 }
