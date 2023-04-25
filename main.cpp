@@ -19,12 +19,13 @@ const int pixel = 25;
 char tmp_map[24][16];
 int music_is_pause = 0;
 bool unlocked_map[31];
+int map_num;
 SDL_Event e;
 const string window_title = "Game project";
 
 void mouseLeftClicked(SDL_Renderer *renderer, SDL_Event e, char game_map[24][16], vector<vector<char>> game_map_saved, deque<vector<vector<char>>> &undo_list,
                     int &undo_times, int &music_is_pause, vector<obj> &arr_box, vector<char> &row, obj &player, int &option_is_on);
-void gamePlay(SDL_Window* window, SDL_Renderer* renderer, SDL_Event &e, string s, char (&tmp_map)[24][16]);
+void gamePlay(SDL_Window* window, SDL_Renderer* renderer, SDL_Event &e, string s, char (&tmp_map)[24][16], int &map_num);
 void Start(SDL_Window* window, SDL_Renderer* renderer, SDL_Event &e);
 void gameMenu(SDL_Window *window, SDL_Renderer *renderer, SDL_Event &e);
 void loadFont(string s, int x, int y, int w, int h, SDL_Renderer *renderer);
@@ -106,14 +107,13 @@ void mouseLeftClicked(SDL_Renderer *renderer, SDL_Event e, char game_map[24][16]
 
 }
 
-void gamePlay(SDL_Window* window, SDL_Renderer* renderer, SDL_Event &e, string s, char (&tmp_map)[24][16])
+void gamePlay(SDL_Window* window, SDL_Renderer* renderer, SDL_Event &e, string s, char (&tmp_map)[24][16], int &map_num)
 {
     char game_map[24][16];
     bool check_success = false;
     int option_is_on = 0;
     bool running = true;
     int undo_times = 3;
-    int map_num;
     if(s != "Restart")
     {
         map_num = stoi(s);
@@ -330,7 +330,7 @@ void gameMenu(SDL_Window *window, SDL_Renderer *renderer, SDL_Event &e)
                 string s = to_string(i);
                 if(e.button.x <= lvRect.x+lvRect.w & e.button.x >= lvRect.x && e.button.y <= lvRect.y+lvRect.h && e.button.y >= lvRect.y)
                 {
-                    gamePlay(window, renderer, e, s, tmp_map);
+                    gamePlay(window, renderer, e, s, tmp_map, map_num);
                     quitSDL(window, renderer);
                     break;
                 }
@@ -381,7 +381,7 @@ void Option(int &option_is_on, SDL_Event &e, SDL_Window *window, SDL_Renderer *r
                         else if(e.button.x >= 212 && e.button.x <= 388 && e.button.y >= 181 && e.button.y <= 220)
                         {
                             //restart
-                            gamePlay(window, renderer, e, "Restart", tmp_map);
+                            gamePlay(window, renderer, e, "Restart", tmp_map, map_num);
                         }
                         else if(e.button.x >= 212 && e.button.x <= 388 && e.button.y >= 238 && e.button.y <= 277)
                         {
@@ -416,7 +416,7 @@ void mapDone(int &map_num, SDL_Window *window, SDL_Renderer *renderer)
         {
             if(e.button.x >= 210 && e.button.x <= 390 && e.button.y >= 180 && e.button.y <= 220)
             {
-                gamePlay(window, renderer, e, to_string(map_num), tmp_map);
+                gamePlay(window, renderer, e, to_string(map_num), tmp_map, map_num);
             }
             else if(e.button.x >= 210 && e.button.x <= 390 && e.button.y >= 232 && e.button.y <= 272)
             {
