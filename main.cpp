@@ -71,7 +71,7 @@ void mouseLeftClicked(SDL_Renderer *renderer, SDL_Event e, char game_map[24][16]
                     player.x = i;
                     player.y = j;
                 }
-                if(game_map[i][j] == 'o')
+                if(game_map[i][j] == 'o'|| game_map[i][j] == 's')
                 {
                     obj box{i, j, 'o'};
                     arr_box.push_back(box);

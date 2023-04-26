@@ -128,7 +128,18 @@ void loadMap(char game_map[24][16], SDL_Renderer *renderer, bool &check_success,
         SDL_Texture *option_board = loadTexture("Image/option.png", renderer);
         SDL_RenderCopy(renderer, option_board, NULL, &option);
         SDL_RenderPresent(renderer);
+        SDL_DestroyTexture(option_board);
     }
+    SDL_DestroyTexture(wall);
+    SDL_DestroyTexture(floor);
+    SDL_DestroyTexture(player);
+    SDL_DestroyTexture(box);
+    SDL_DestroyTexture(coin);
+    SDL_DestroyTexture(success_box);
+    SDL_DestroyTexture(undoButton);
+    SDL_DestroyTexture(menuButton);
+    SDL_DestroyTexture(speakerButton);
+    SDL_DestroyTexture(muteButton);
 }
 
 
