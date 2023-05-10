@@ -33,7 +33,7 @@ Sau khi tải xong, giải nén file zip này và truy cập folder vừa giải
 [Thư viện SDL Image](https://drive.google.com/drive/folders/17jmCScYU34SX4DgE-dJR6h4dc52j-NCH?usp=sharing)<br>
 [Video hướng dẫn cài SDL vào CodeBlocks](https://www.youtube.com/watch?v=dC77R3MYjcU)
 </br>
-- <b>Bước 4 :</b> Nháy nút Build and Run ở CodeBlocks để bắt đầu trò chơi.<br>
+- <b>Bước 4 :</b>Mở file SDL Final.cbp. Nháy nút Build and Run ở CodeBlocks để bắt đầu trò chơi.<br>
 ![](https://user-images.githubusercontent.com/112875574/230722451-56aeaf8a-9564-4be7-942f-50d26b9a225f.png)
 
 ## Cảm ơn mọi người đã quan tâm tới project của mình.<img src= "https://user-images.githubusercontent.com/112875574/230720761-49a9feb6-8580-4184-a256-9d07c0db68d5.png" width = 13px><img src= "https://user-images.githubusercontent.com/112875574/230720761-49a9feb6-8580-4184-a256-9d07c0db68d5.png" width = 13px>
